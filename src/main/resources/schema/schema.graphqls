@@ -1,0 +1,21 @@
+type Query {
+    prices:[BatteryPrice]
+}
+
+type Mutation {
+  savePrice(batteryPriceInput:BatteryPriceInput):BatteryPrice
+}
+type BatteryPrice {
+    id: ID
+    names: [String]
+    price : Int
+}
+
+input BatteryPriceInput {
+    names: String
+    price : Int
+}
+schema {
+    query: Query
+    mutation: Mutation
+}

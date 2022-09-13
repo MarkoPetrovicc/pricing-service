@@ -1,0 +1,28 @@
+kafka:
+  producer:
+    "bootstrap.servers": localhost:9092
+    "batch-size": 200000
+    "request.timeout.ms": 120000
+    "linger.ms": 100
+    "compression.type": lz4
+    "enable.idempotence": true
+    "spring.json.add.type.headers": true
+  consumer:
+    "bootstrap.servers": localhost:9092
+    "enable.auto.commit": true
+    "max.poll.records": 500
+    "max.poll.interval.ms": 180000
+    "max.partition.fetch.bytes": 2147483647
+    "session.timeout.ms": 60000
+    "heartbeat.interval.ms": 500
+    "fetch.max.bytes": 2147483647
+    "auto.offset.reset": earliest
+    "spring.json.value.default.type": json
+    "spring.json.trusted.packages": "*"
+  containerFactory:
+    concurrency: 1
+    decrypt-messages: false
+    encrypt-messages: false
+    ack-mode: RECORD
+    batch-listener: false
+    missing-topic-fatal: false
