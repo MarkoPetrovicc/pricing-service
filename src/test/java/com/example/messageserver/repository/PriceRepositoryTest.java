@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 
 import java.util.Arrays;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DataMongoTest
 public class PriceRepositoryTest {
 
-    @Autowired
+    @SpyBean
     private PriceRepository priceRepository;
     List<String> names = Arrays.asList("test1", "test2", "test3");
 
@@ -48,7 +49,7 @@ public class PriceRepositoryTest {
     void shouldFindAll(){
         List<BatteryPrice> batteryPrices = priceRepository.findAll();
 
-        assertEquals(31, batteryPrices.size());
+        assertEquals(41, batteryPrices.size());
     }
 
 }
