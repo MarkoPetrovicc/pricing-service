@@ -11,6 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/price")
@@ -25,7 +26,10 @@ public class PriceController {
     }
     @GetMapping("/findOne")
     public ResponseEntity<BatteryPrice> getOneByPrice(@RequestParam double price){
-        return new ResponseEntity<>(priceService.findOneByPrice(price), HttpStatus.OK);
+       return Optional
+                .ofNullable( priceService.findOneByPrice(price) )
+                .map( user -> ResponseEntity.ok().body(user) )
+                .orElseGet( () -> ResponseEntity.notFound().build() );
     }
 
     @GetMapping("/apiCall")

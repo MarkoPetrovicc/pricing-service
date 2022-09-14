@@ -58,8 +58,6 @@ public class DataFetcherTest {
 
     @Test
     public void savePrice() {
-        BatteryPrice batteryPrice = new BatteryPrice();
-
         BatteryPrice priceToCreate = BatteryPrice.builder()
                 .id(new ObjectId("631efbf2c22f3763c63a6a84"))
                 .price(300.0)

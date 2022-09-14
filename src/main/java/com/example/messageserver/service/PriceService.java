@@ -33,7 +33,6 @@ public class PriceService {
 
     public void calculatePrice(BatteryStatisticDto batteries) {
         BatteryPrice batteryPrice = new BatteryPrice();
-        batteryPrice.setId(new ObjectId("6319b3fdcc03d4d86505b6e0"));
         batteryPrice.setPrice(batteries.getTotalWattCapacity()*15);
         batteryPrice.setBatteryName(batteries.getName());
         priceRepository.save(batteryPrice);

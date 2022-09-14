@@ -22,9 +22,9 @@ public class KafkaListeners {
 
     private CountDownLatch latch = new CountDownLatch(1);
 
-    @KafkaListener(topics = orderTopic, groupId = "name", errorHandler = "priceErrorHandler")
-    public void consumeMessage(String message) throws JsonProcessingException {
-        BatteryStatisticDto batteryDto = objectMapper.readValue(message, BatteryStatisticDto.class);
+    @KafkaListener(topics = orderTopic, groupId = "name")
+    public void consumeMessage(BatteryStatisticDto batteryDto) throws JsonProcessingException {
+       // BatteryStatisticDto batteryDto = objectMapper.readValue(message, BatteryStatisticDto.class);
         if(batteryDto.getTotalWattCapacity()>50.0){
            throw new IllegalArgumentException("Too much watt capacity " + batteryDto.getTotalWattCapacity());
         }

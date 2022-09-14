@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import java.util.Arrays;
@@ -31,6 +33,8 @@ public class PriceServiceTest {
     @Mock
     private WebClient webClient;
 
+    @Autowired ModelMapper modelMapper;
+
 
     @Mock
     private WebClient.RequestHeadersUriSpec requestHeadersUriSpecMock;
@@ -49,7 +53,7 @@ public class PriceServiceTest {
     @BeforeEach
     void setup(){
         MockitoAnnotations.initMocks(this);
-       // priceService =new PriceService(webClient, priceRepository, priceDALimpl);
+        priceService =new PriceService(webClient, priceRepository, priceDALimpl, modelMapper);
         when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
         when(requestHeadersUriSpecMock.uri("/batteryPrice")).thenReturn(requestHeadersUriSpecMock);
         when(requestHeadersUriSpecMock.headers(any())).thenReturn(requestHeadersUriSpecMock);

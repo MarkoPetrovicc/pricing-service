@@ -60,8 +60,7 @@ public class ServerSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
         http.authorizeRequests()
-                .antMatchers("/swagger-ui.html/**", "/configuration/**",
-                        "/swagger-resources/**", "/v2/api-docs")
+                .antMatchers("/configuration/**")
                 .permitAll().and().authorizeRequests()
                 .antMatchers("/*").hasRole("admin")
                 .antMatchers("/*").hasRole("user")

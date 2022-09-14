@@ -26,3 +26,25 @@ kafka:
     ack-mode: RECORD
     batch-listener: false
     missing-topic-fatal: false
+
+  keycloak:
+      auth-server-url: https://csr-sr.iten.rs/auth
+      realm: battery-new
+      public-client: 'true'
+      bearer-only: 'true'
+      use-resource-role-mappings: 'true'
+      resource: battery-new
+      security-constraints[0]:
+        authRoles[0]: user
+        authRoles[1]: admin
+
+      spring:
+        kafka:
+          bootstrap-servers: localhost:9092
+        data:
+          mongodb:
+            database: power_plant
+            port: '27017'
+            host: localhost
+      server:
+        port: '8081'
