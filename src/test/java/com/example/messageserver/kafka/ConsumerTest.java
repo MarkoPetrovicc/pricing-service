@@ -47,7 +47,7 @@ public class ConsumerTest {
         String message = ow.writeValueAsString(batteryStatisticDto);
 
         Mockito.when(objectMapper.readValue(message ,BatteryStatisticDto.class)).thenReturn(batteryStatisticDto);
-        kafkaListeners.consumeMessage(message);
+        kafkaListeners.consumeMessage(batteryStatisticDto);
         Mockito.verify(priceService, Mockito.times(1))
                 .calculatePrice(any(BatteryStatisticDto.class));
     }
@@ -59,7 +59,7 @@ public class ConsumerTest {
         batteryStatisticDto.setTotalWattCapacity(5000.0);
         IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Mockito.when(objectMapper.readValue(message ,BatteryStatisticDto.class)).thenReturn(batteryStatisticDto);
-            kafkaListeners.consumeMessage(message);
+            kafkaListeners.consumeMessage(batteryStatisticDto);
         });
 
         Assertions.assertEquals("Too much watt capacity 5000.0", thrown.getMessage());

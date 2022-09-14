@@ -18,7 +18,6 @@ public class BatteryPrice {
 
     @Id
     private ObjectId id;
-
     private List<String> batteryName;
     private double price;
 }

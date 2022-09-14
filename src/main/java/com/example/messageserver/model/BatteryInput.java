@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BatteryInput {
-    String name;
-    double price;
+    private String name;
+    private double price;
 }

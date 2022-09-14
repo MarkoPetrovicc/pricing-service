@@ -49,7 +49,7 @@ public class DataFetcherTest {
             .batteryName(names)
             .build();
 
-    List<BatteryPrice> batteryPrices = Arrays.asList(priceToCreate, priceToCreate, priceToCreate);
+    List<BatteryPrice> batteryPrices = List.of(priceToCreate, priceToCreate, priceToCreate);
 
     @BeforeEach
     public void before(){

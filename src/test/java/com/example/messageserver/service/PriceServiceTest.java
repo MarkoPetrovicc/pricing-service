@@ -6,7 +6,6 @@ import com.example.messageserver.model.BatteryStatisticDto;
 import com.example.messageserver.repository.PriceDALimpl;
 import com.example.messageserver.repository.PriceRepository;
 import org.bson.types.ObjectId;
-import org.hibernate.boot.MetadataBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -42,8 +41,6 @@ public class PriceServiceTest {
     @Mock
     private WebClient.RequestBodySpec requestBodySpecMock;
 
-    @Mock
-    private MetadataBuilder metadataBuilder;
     @Mock
     private WebClient.ResponseSpec mockResponseSpec;
     @Mock

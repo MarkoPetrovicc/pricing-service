@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class BatteryOnlyPriceDto {
 
-    double price;
+    private double price;
 }
