@@ -2,6 +2,7 @@ package com.example.messageserver.graphql;
 
 import com.example.messageserver.model.BatteryInput;
 import com.example.messageserver.model.BatteryPrice;
+import com.example.messageserver.model.graphql.types.BatteryPriceInput;
 import com.example.messageserver.repository.PriceRepository;
 import com.example.messageserver.service.PriceService;
 import com.netflix.graphql.dgs.*;
@@ -26,9 +27,8 @@ public class DataFetcher {
     }
 
     @DgsMutation
-    public BatteryPrice savePrice(@InputArgument("batteryPriceInput") BatteryInput batteryInput){
-        BatteryPrice price = modelMapper.map(batteryInput, BatteryPrice.class);
-       return priceService.savePrice(price);
+    public BatteryPrice savePrice(@InputArgument("batteryPriceInput") BatteryPriceInput batteryInput){
+       return priceService.savePrice(batteryInput);
 
     }
 

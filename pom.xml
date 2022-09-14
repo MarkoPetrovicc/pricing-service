@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -69,12 +69,12 @@
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 			<version>2.7.3</version>
 		</dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>RELEASE</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
@@ -93,14 +93,49 @@
 			<groupId>com.netflix.graphql.dgs.codegen</groupId>
 			<artifactId>graphql-dgs-codegen-client-core</artifactId>
 			<version>5.1.8</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.netflix.graphql.dgs</groupId>
 			<artifactId>graphql-dgs-extended-scalars</artifactId>
 			<version>5.2.1</version>
 		</dependency>
-    </dependencies>
+		<dependency>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-spring-boot-starter</artifactId>
+			<version>11.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-spring-security-adapter</artifactId>
+			<version>11.0.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcpkix-jdk15on</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk15on</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.keycloak.bom</groupId>
+				<artifactId>keycloak-adapter-bom</artifactId>
+				<version>11.0.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>
@@ -112,6 +147,13 @@
 				<groupId>io.github.deweyjose</groupId>
 				<artifactId>graphqlcodegen-maven-plugin</artifactId>
 				<version>1.23</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
 					<generateClient>true</generateClient>
 					<generateDataTypes>true</generateDataTypes>
@@ -120,16 +162,27 @@
 					<schemaPaths>
 						<param>${project.basedir}/src/main/resources/schema/schema.graphqls</param>
 					</schemaPaths>
-					<typeMapping>
-						<PositiveInt>java.lang.Integer</PositiveInt>
-						<UUID>java.util.UUID</UUID>
-						<ObjectId>org.bson.types.ObjectId</ObjectId>
-					</typeMapping>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/generated-sources/graphql</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 
-		<finalName>message-server</finalName>
 	</build>
 
 </project>

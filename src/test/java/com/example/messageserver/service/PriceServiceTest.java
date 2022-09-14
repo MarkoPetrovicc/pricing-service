@@ -49,7 +49,7 @@ public class PriceServiceTest {
     @BeforeEach
     void setup(){
         MockitoAnnotations.initMocks(this);
-        priceService =new PriceService(webClient, priceRepository, priceDALimpl);
+       // priceService =new PriceService(webClient, priceRepository, priceDALimpl);
         when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
         when(requestHeadersUriSpecMock.uri("/batteryPrice")).thenReturn(requestHeadersUriSpecMock);
         when(requestHeadersUriSpecMock.headers(any())).thenReturn(requestHeadersUriSpecMock);

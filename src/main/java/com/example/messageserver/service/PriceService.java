@@ -4,11 +4,13 @@ package com.example.messageserver.service;
 import com.example.messageserver.model.BatteryOnlyPriceDto;
 import com.example.messageserver.model.BatteryPrice;
 import com.example.messageserver.model.BatteryStatisticDto;
+import com.example.messageserver.model.graphql.types.BatteryPriceInput;
 import com.example.messageserver.repository.PriceDALimpl;
 import com.example.messageserver.repository.PriceRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bson.types.ObjectId;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -26,6 +28,8 @@ public class PriceService {
     private final WebClient webClient;
     private final PriceRepository priceRepository;
     private final PriceDALimpl priceDALimpl;
+
+    private final ModelMapper modelMapper;
 
     public void calculatePrice(BatteryStatisticDto batteries) {
         BatteryPrice batteryPrice = new BatteryPrice();
@@ -53,7 +57,8 @@ public class PriceService {
                 .bodyToMono(BatteryOnlyPriceDto.class)
                 .block();
     }
-    public BatteryPrice savePrice(BatteryPrice batteryPrice){
+    public BatteryPrice savePrice(BatteryPriceInput batteryPriceInput){
+        BatteryPrice batteryPrice = modelMapper.map(batteryPriceInput, BatteryPrice.class);
         return priceRepository.save(batteryPrice);
     }
 }

@@ -1,12 +1,13 @@
 package com.example.messageserver.controller;
 
 import com.example.messageserver.graphql.DataFetcher;
-import com.example.messageserver.model.BatteryInput;
 import com.example.messageserver.model.BatteryPrice;
+import com.example.messageserver.model.graphql.client.PricesProjectionRoot;
+import com.example.messageserver.model.graphql.client.SavePriceGraphQLQuery;
+import com.example.messageserver.model.graphql.types.BatteryPriceInput;
 import com.example.messageserver.service.PriceService;
 import com.netflix.graphql.dgs.DgsQueryExecutor;
 import com.netflix.graphql.dgs.autoconfig.DgsAutoConfiguration;
-import com.netflix.graphql.dgs.client.codegen.GraphQLQuery;
 import com.netflix.graphql.dgs.client.codegen.GraphQLQueryRequest;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,8 +24,9 @@ import org.springframework.context.annotation.Import;
 
 import java.util.Arrays;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.BDDMockito.given;
+
 
 @Import({DgsAutoConfiguration.class, DataFetcher.class, PriceService.class})
 @SpringBootTest
@@ -56,6 +58,31 @@ public class DataFetcherTest {
 
     @Test
     public void savePrice() {
+        BatteryPrice batteryPrice = new BatteryPrice();
+
+        BatteryPrice priceToCreate = BatteryPrice.builder()
+                .id(new ObjectId("631efbf2c22f3763c63a6a84"))
+                .price(300.0)
+                .batteryName(names)
+                .build();
+
+        BatteryPriceInput batteryPriceInput = new BatteryPriceInput();
+        batteryPriceInput.setPrice(200);
+        batteryPriceInput.setNames("marko");
+        Mockito.when(priceService.savePrice(batteryPriceInput)).thenReturn(priceToCreate);
+
+
+        GraphQLQueryRequest graphQLQueryRequest = new GraphQLQueryRequest(
+               SavePriceGraphQLQuery.newRequest().batteryPriceInput(batteryPriceInput).build(),
+                new PricesProjectionRoot().price());
+
+
+        var user = dgsQueryExecutor.executeAndExtractJsonPathAsObject(
+                graphQLQueryRequest.serialize(),
+                "data.savePrice",
+                BatteryPrice.class
+        );
+            assertEquals(user.getPrice(), priceToCreate.getPrice());
     }
     @Test
     void getPrices(){
