@@ -2,6 +2,7 @@ package com.example.messageserver.controller;
 
 import com.example.messageserver.graphql.DataFetcher;
 import com.example.messageserver.model.BatteryPrice;
+import com.example.messageserver.model.graphql.client.PricesGraphQLQuery;
 import com.example.messageserver.model.graphql.client.PricesProjectionRoot;
 import com.example.messageserver.model.graphql.client.SavePriceGraphQLQuery;
 import com.example.messageserver.model.graphql.types.BatteryPriceInput;
@@ -86,12 +87,12 @@ public class DataFetcherTest {
     void getPrices(){
 
         Mockito.when(priceService.getAll()).thenReturn(batteryPrices);
+        GraphQLQueryRequest graphQLQueryRequest = new GraphQLQueryRequest(
+                PricesGraphQLQuery.newRequest().build(),
+                new PricesProjectionRoot().price().id());
 
         List<BatteryPrice> batteries = dgsQueryExecutor.executeAndExtractJsonPath(
-                "{prices{\n" +
-                        "  id\n" +
-                        "  price\n" +
-                        "}}", "data.prices");
+                graphQLQueryRequest.serialize(), "data.prices");
         assertEquals(batteries.size(), batteries.size());
 
 
