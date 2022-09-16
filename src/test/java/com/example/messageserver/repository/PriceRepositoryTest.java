@@ -49,7 +49,7 @@ public class PriceRepositoryTest {
     void shouldFindAll(){
         List<BatteryPrice> batteryPrices = priceRepository.findAll();
 
-        assertEquals(41, batteryPrices.size());
+        assertEquals(66, batteryPrices.size());
     }
 
 }

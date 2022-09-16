@@ -8,6 +8,7 @@ import com.example.messageserver.service.PriceService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
+import org.keycloak.adapters.KeycloakConfigResolver;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
@@ -50,6 +51,9 @@ class PriceControllerTest {
 
     @MockBean
     PriceRepository priceRepository;
+
+    @MockBean
+    KeycloakConfigResolver keycloakConfigResolver;
 
     List<String> names = Arrays.asList("test1", "test2", "test3");
 
@@ -97,6 +101,7 @@ class PriceControllerTest {
                 .andExpect(jsonPath("$[1].price").exists())
                 .andReturn();
     }
+
     @Test
     void getOnePrice_success() throws Exception {
        List<BatteryPrice> batteries = Arrays.asList(batteryPrice1, batteryPrice2);

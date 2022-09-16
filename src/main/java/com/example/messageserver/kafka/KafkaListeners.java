@@ -23,7 +23,7 @@ public class KafkaListeners {
     private CountDownLatch latch = new CountDownLatch(1);
 
     @KafkaListener(topics = orderTopic, groupId = "name", errorHandler = "priceErrorHandler")
-    public void consumeMessage(BatteryStatisticsDtoEvent batteryStatisticsDtoEvent) throws JsonProcessingException {
+    public void consumeMessage(BatteryStatisticsDtoEvent batteryStatisticsDtoEvent) {
        BatteryStatisticDto batteryStatisticDto = batteryStatisticsDtoEvent.getBatteryStatisticDto();
        String operation = batteryStatisticsDtoEvent.getBatteryStatisticsDtoOperation().getValue();
         if(batteryStatisticDto.getTotalWattCapacity()>5000){

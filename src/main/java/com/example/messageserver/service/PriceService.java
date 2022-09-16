@@ -7,11 +7,12 @@ import com.example.messageserver.model.BatteryStatisticDto;
 import com.example.messageserver.model.graphql.types.BatteryPriceInput;
 import com.example.messageserver.repository.PriceDALimpl;
 import com.example.messageserver.repository.PriceRepository;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -23,7 +24,7 @@ import java.util.List;
 
 @Service
 @Data
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PriceService {
 
     private final WebClient webClient;
@@ -32,8 +33,9 @@ public class PriceService {
 
     private final ModelMapper modelMapper;
 
+    @Value("${base.url}")
+    private String baseUrl;
 
-    private final String baseUrl = "https://813df768-ced3-44c0-a14c-73c15ada1666.mock.pstmn.io";
 
     public void calculatePrice(BatteryStatisticDto batteries, String operation) {
         BatteryOnlyPriceDto batteryOnlyPriceDto = getPrice(operation);
@@ -63,14 +65,19 @@ public class PriceService {
         BatteryPrice batteryPrice = modelMapper.map(batteryPriceInput, BatteryPrice.class);
         return priceRepository.save(batteryPrice);
     }
-    public String formUri(String operation){
-        if(operation.equals("MEDIUM")){
-            return baseUrl + "/calculatePrice?operation=MEDIUM";
+    private String formUri(String operation){
+        switch (operation) {
+
+            case "MEDIUM" :
+                return baseUrl + "/?operation=MEDIUM";
+
+            case "HIGH":
+                return baseUrl + "/operation=HIGH";
+
+            default:
+                return baseUrl + "/?operation=LOW";
+
         }
-        else if(operation.equals("HIGH")){
-            return baseUrl + "/calculatePrice?operation=HIGH";
-        }
-        return baseUrl+ "/calculatePrice?operation=LOW";
     }
     public List<BatteryPrice> getAllPrices(){
         return priceRepository.findAll();

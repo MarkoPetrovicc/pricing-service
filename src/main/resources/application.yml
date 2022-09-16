@@ -49,5 +49,5 @@ kafka:
       server:
         port: '8081'
 
-      base:
-        url: 'https://813df768-ced3-44c0-a14c-73c15ada1666.mock.pstmn.io'
+base:
+  url: 'https://813df768-ced3-44c0-a14c-73c15ada1666.mock.pstmn.io/calculatePrice'

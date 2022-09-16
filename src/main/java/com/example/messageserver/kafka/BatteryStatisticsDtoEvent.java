@@ -6,13 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class BatteryStatisticsDtoEvent {
 
-    private String id;
+    private UUID eventUid;
     private BatteryStatisticDto batteryStatisticDto;
     private BatteryStatisticsDtoOperation batteryStatisticsDtoOperation;
 }

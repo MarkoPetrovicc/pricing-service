@@ -19,6 +19,7 @@ import org.testng.annotations.Ignore;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -45,37 +46,36 @@ public class ConsumerTest {
 
     @Test
     public void shouldConsumeMessage() throws IOException, InterruptedException {
-        List<String> names = Arrays.asList("test1", "test2", "test3");
+        List<String> names = List.of("test1", "test2", "test3");
         BatteryStatisticDto batteryStatistic = BatteryStatisticDto.builder()
                 .totalWattCapacity(200)
                 .averageWattCapacity(100)
                 .name(names).build();
-
-        //ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         BatteryStatisticsDtoEvent batteryStatisticDto = BatteryStatisticsDtoEvent.builder()
-                .id("id1")
+                .eventUid(UUID.randomUUID())
                 .batteryStatisticDto(batteryStatistic)
                 .batteryStatisticsDtoOperation(BatteryStatisticsDtoOperation.LOW).build();
-        //String message = ow.writeValueAsString(batteryStatisticDto);
-
-       // Mockito.when(objectMapper.readValue(message ,BatteryStatisticsDtoEvent.class)).thenReturn(batteryStatisticDto);
         kafkaListeners.consumeMessage(batteryStatisticDto);
         Mockito.verify(priceService, Mockito.times(1))
                 .calculatePrice(any(BatteryStatisticDto.class),any(String.class));
     }
     @Test
-    public void shouldThrowIllegalArgumentException() throws JsonProcessingException {
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+    public void shouldThrowIllegalArgumentException()  {
+        List<String> names = List.of("test1", "test2", "test3");
         BatteryStatisticDto batteryStatisticDto = new BatteryStatisticDto();
-        BatteryStatisticsDtoEvent batteryStatisticsDtoEvent = new BatteryStatisticsDtoEvent();
-        String message = ow.writeValueAsString(batteryStatisticDto);
-        batteryStatisticDto.setTotalWattCapacity(5000.0);
+        BatteryStatisticDto batteryStatistic = BatteryStatisticDto.builder()
+                .totalWattCapacity(10000.0)
+                .averageWattCapacity(222)
+                .name(names).build();
+        BatteryStatisticsDtoEvent batteryStatisticsDtoEvent = BatteryStatisticsDtoEvent.builder()
+                .eventUid(UUID.randomUUID())
+                .batteryStatisticDto(batteryStatistic)
+                .batteryStatisticsDtoOperation(BatteryStatisticsDtoOperation.MEDIUM).build();
         IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            Mockito.when(objectMapper.readValue(message ,BatteryStatisticDto.class)).thenReturn(batteryStatisticDto);
             kafkaListeners.consumeMessage(batteryStatisticsDtoEvent);
         });
 
-        Assertions.assertEquals("Too much watt capacity 5000.0", thrown.getMessage());
+        Assertions.assertEquals("Too much watt capacity 10000.0", thrown.getMessage());
 
     }
 }
