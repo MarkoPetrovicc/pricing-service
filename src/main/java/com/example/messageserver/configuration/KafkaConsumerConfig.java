@@ -1,5 +1,6 @@
 package com.example.messageserver.configuration;
 
+import com.example.messageserver.kafka.BatteryStatisticsDtoEvent;
 import com.example.messageserver.model.BatteryStatisticDto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -31,16 +32,16 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, BatteryStatisticDto> consumerFactory() {
+    public ConsumerFactory<String, BatteryStatisticsDtoEvent> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(
                 consumerConfigs(),
                 new StringDeserializer(),
-                new JsonDeserializer<>(BatteryStatisticDto.class));
+                new JsonDeserializer<>(BatteryStatisticsDtoEvent.class));
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, BatteryStatisticDto> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, BatteryStatisticDto> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, BatteryStatisticsDtoEvent> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, BatteryStatisticsDtoEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;

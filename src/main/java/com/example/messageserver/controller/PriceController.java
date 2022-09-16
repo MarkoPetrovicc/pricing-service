@@ -32,8 +32,4 @@ public class PriceController {
                 .orElseGet( () -> ResponseEntity.notFound().build() );
     }
 
-    @GetMapping("/apiCall")
-    public ResponseEntity<BatteryOnlyPriceDto> getPrice(){
-        return new ResponseEntity<>(priceService.getPrice(), HttpStatus.OK);
-    }
 }

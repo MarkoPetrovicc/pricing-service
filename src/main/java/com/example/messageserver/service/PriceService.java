@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -31,14 +32,15 @@ public class PriceService {
 
     private final ModelMapper modelMapper;
 
-    public void calculatePrice(BatteryStatisticDto batteries) {
+
+    private final String baseUrl = "https://813df768-ced3-44c0-a14c-73c15ada1666.mock.pstmn.io";
+
+    public void calculatePrice(BatteryStatisticDto batteries, String operation) {
+        BatteryOnlyPriceDto batteryOnlyPriceDto = getPrice(operation);
         BatteryPrice batteryPrice = new BatteryPrice();
-        batteryPrice.setPrice(batteries.getTotalWattCapacity()*15);
+        batteryPrice.setPrice(batteries.getTotalWattCapacity()* batteryOnlyPriceDto.getPrice());
         batteryPrice.setBatteryName(batteries.getName());
         priceRepository.save(batteryPrice);
-
-        System.out.println("Price is " + batteries.getTotalWattCapacity() * 15 + " RSD" + "for " + batteries.getName());
-
 
     }
     public List<BatteryPrice> getAll(){
@@ -49,15 +51,28 @@ public class PriceService {
         return priceDALimpl.findOneByPrice(price);
     }
 
-    public BatteryOnlyPriceDto getPrice(){
-        return webClient.get()
-                .uri("/batteryPrice")
-                .retrieve()
-                .bodyToMono(BatteryOnlyPriceDto.class)
-                .block();
+    public BatteryOnlyPriceDto getPrice(String operation){
+            return webClient.get()
+                    .uri(formUri(operation))
+                    .retrieve()
+                    .bodyToMono(BatteryOnlyPriceDto.class)
+                    .block();
+
     }
     public BatteryPrice savePrice(BatteryPriceInput batteryPriceInput){
         BatteryPrice batteryPrice = modelMapper.map(batteryPriceInput, BatteryPrice.class);
         return priceRepository.save(batteryPrice);
+    }
+    public String formUri(String operation){
+        if(operation.equals("MEDIUM")){
+            return baseUrl + "/calculatePrice?operation=MEDIUM";
+        }
+        else if(operation.equals("HIGH")){
+            return baseUrl + "/calculatePrice?operation=HIGH";
+        }
+        return baseUrl+ "/calculatePrice?operation=LOW";
+    }
+    public List<BatteryPrice> getAllPrices(){
+        return priceRepository.findAll();
     }
 }
