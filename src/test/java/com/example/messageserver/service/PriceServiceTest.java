@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import java.util.Arrays;
@@ -48,7 +49,8 @@ public class PriceServiceTest {
     @Mock
     private WebClient.RequestHeadersSpec mockRequestHeadersSpec;
 
-    private final String baseUrl = "https://813df768-ced3-44c0-a14c-73c15ada1666.mock.pstmn.io";
+    @Value("${base.url}")
+    private String baseUrl;
 
 
     @BeforeEach
@@ -56,7 +58,7 @@ public class PriceServiceTest {
         MockitoAnnotations.initMocks(this);
         priceService =new PriceService(webClient, priceRepository, priceDALimpl, modelMapper);
         when(webClient.get()).thenReturn(requestHeadersUriSpecMock);
-        when(requestHeadersUriSpecMock.uri(baseUrl+"/calculatePrice?operation=LOW")).thenReturn(requestHeadersUriSpecMock);
+        when(requestHeadersUriSpecMock.uri(baseUrl+"?operation=LOW")).thenReturn(requestHeadersUriSpecMock);
         when(requestHeadersUriSpecMock.headers(any())).thenReturn(requestHeadersUriSpecMock);
         when(requestHeadersUriSpecMock.header(any(), any())).thenReturn(mockRequestHeadersSpec);
         when(mockRequestHeadersSpec.retrieve()).thenReturn(mockResponseSpec);
@@ -116,7 +118,7 @@ public class PriceServiceTest {
         when(responseSpecMock.bodyToMono(BatteryOnlyPriceDto.class)).thenReturn(
                 Mono.just(batteryOnlyPriceDto));
         when(requestHeadersUriSpecMock.retrieve()).thenReturn(responseSpecMock);
-        BatteryOnlyPriceDto batteryPrice = priceService.getPrice(baseUrl+"/calculatePrice?operation=LOW");
+        BatteryOnlyPriceDto batteryPrice = priceService.getPrice(baseUrl+"?operation=LOW");
         assertThat(batteryPrice).isEqualTo(batteryOnlyPriceDto);
 
 
